@@ -39,9 +39,9 @@ func setupTestDB() *sql.DB {
 
 func setupRouter(db *sql.DB) http.Handler {
 	validate := validator.New()
-	categoryRepository := repository.NewCategoryRepository()
-	categoryService := service.NewCategoryService(categoryRepository, db, validate)
-	categoryController := controller.NewCategoryController(categoryService)
+	categoryRepository := repository.NewCategoryRepositoryImpl()
+	categoryService := service.NewCategoryServiceImpl(categoryRepository, db, validate)
+	categoryController := controller.NewCategoryControllerImpl(categoryService)
 	router := app.NewRouter(categoryController)
 
 	return middleware.NewAuthMiddleware(router)
@@ -111,7 +111,7 @@ func TestUpdateCategorySuccess(t *testing.T) {
 	truncateCategory(db)
 
 	tx, _ := db.Begin()
-	categoryRepository := repository.NewCategoryRepository()
+	categoryRepository := repository.NewCategoryRepositoryImpl()
 	category := categoryRepository.Save(context.Background(), tx, domain.Category{
 		Name: "Gadget",
 	})
@@ -148,7 +148,7 @@ func TestUpdateCategoryFailed(t *testing.T) {
 	truncateCategory(db)
 
 	tx, _ := db.Begin()
-	categoryRepository := repository.NewCategoryRepository()
+	categoryRepository := repository.NewCategoryRepositoryImpl()
 	category := categoryRepository.Save(context.Background(), tx, domain.Category{
 		Name: "Gadget",
 	})
@@ -183,7 +183,7 @@ func TestGetCategorySuccess(t *testing.T) {
 	truncateCategory(db)
 
 	tx, _ := db.Begin()
-	categoryRepository := repository.NewCategoryRepository()
+	categoryRepository := repository.NewCategoryRepositoryImpl()
 	category := categoryRepository.Save(context.Background(), tx, domain.Category{
 		Name: "Gadget",
 	})
@@ -246,7 +246,7 @@ func TestDeleteCategorySuccess(t *testing.T) {
 	truncateCategory(db)
 
 	tx, _ := db.Begin()
-	categoryRepository := repository.NewCategoryRepository()
+	categoryRepository := repository.NewCategoryRepositoryImpl()
 	category := categoryRepository.Save(context.Background(), tx, domain.Category{
 		Name: "Gadget",
 	})
@@ -307,7 +307,7 @@ func TestListCategoriesSuccess(t *testing.T) {
 	truncateCategory(db)
 
 	tx, _ := db.Begin()
-	categoryRepository := repository.NewCategoryRepository()
+	categoryRepository := repository.NewCategoryRepositoryImpl()
 	category0 := categoryRepository.Save(context.Background(), tx, domain.Category{
 		Name: "Gadget",
 	})
